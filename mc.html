@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>proxy-lite 파일 분석</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        pre {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .example {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .diagram {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>proxy-lite 파일 분석</h1>
+    
+    <h2>1. proxy-lite의 기능 및 이점 설명</h2>
+    <p>proxy-lite는 경량화된 프록시 서버 구현체로, 클라이언트와 서버 사이에서 중간 다리 역할을 합니다. 일상생활에 비유하면 다음과 같습니다:</p>
+    
+    <div class="example">
+        <h3>일상 생활 예시:</h3>
+        <ul>
+            <li><strong>호텔 컨시어지 서비스:</strong> 손님(클라이언트)이 직접 레스토랑에 예약하거나 택시를 부르지 않고, 컨시어지(프록시)에게 요청하면 대신 처리해줍니다.</li>
+            <li><strong>통역사:</strong> 서로 다른 언어를 사용하는 사람들 사이에서 대화를 중개합니다.</li>
+        </ul>
+
+        <h3>이점:</h3>
+        <ol>
+            <li><strong>보안 강화</strong> - 집 앞에 CCTV를 설치하는 것처럼 악성 접근을 차단합니다</li>
+            <li><strong>속도 향상</strong> - 자주 방문하는 카페의 메뉴를 미리 외워두는 것처럼 자주 요청되는 데이터를 저장(캐싱)합니다</li>
+            <li><strong>익명성</strong> - 택배 기사님이 실제 발신자 정보를 모르게 택배를 보내는 것처럼 실제 IP를 숨깁니다</li>
+            <li><strong>트래픽 제어</strong> - 교통 경찰처럼 데이터 흐름을 관리하고 제어합니다</li>
+        </ol>
+    </div>
+
+    <h2>2. 파일 구조 (트리 형태)</h2>
+    <pre><code>proxy-lite/
+├── LICENSE
+├── README.md
+├── docker-compose.yml
+├── nginx/
+│   ├── Dockerfile
+│   ├── README.md
+│   └── nginx.conf
+├── proxy/
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── app.py
+│   ├── main.py
+│   ├── models.py
+│   ├── requirements.txt
+│   └── utils.py
+└── tests/
+    ├── README.md
+    └── client.py</code></pre>
+
+    <h2>3. 가장 핵심적인 Top3 파일</h2>
+    <ol>
+        <li><code>/proxy/main.py</code></li>
+        <li><code>/proxy/app.py</code></li>
+        <li><code>/nginx/nginx.conf</code></li>
+    </ol>
+
+    <h2>4. Top3 파일이 중요한 이유 (쉬운 설명)</h2>
+    <div class="example">
+        <ol>
+            <li><strong>main.py</strong> - 이 파일은 마치 놀이공원의 입구 게이트와 같아요. 모든 손님(요청)이 여기를 통해 들어오고, 어디로 가야할지 안내받습니다. 여기서 프로그램이 시작되고 모든 것을 조율하기 때문에 가장 중요해요.</li>
+            <br>
+            <li><strong>app.py</strong> - 이 파일은 놀이공원의 안내원이에요. 손님이 원하는 놀이기구(서비스)로 안내하고, 문제가 생기면 해결해줍니다. 실제로 요청을 처리하고 응답을 만드는 중요한 일을 담당합니다.</li>
+            <br>
+            <li><strong>nginx.conf</strong> - 이 파일은 놀이공원의 지도와 같아요. 어떤 길로 가야 원하는 곳에 빨리 도착할 수 있는지, 너무 많은 사람이 한 곳에 몰리지 않도록 인파를 분산시키는 방법이 적혀있어요. 트래픽을 효율적으로 관리하고 분배하는 중요한 설정을 담고 있습니다.</li>
+        </ol>
+    </div>
+
+    <h2>5. 실행 순서 다이어그램</h2>
+    
+    <h3>시퀀스 다이어그램 (PlantUML)</h3>
+    <div class="diagram">
+        <pre><code>@startuml
+actor Client
+participant "Nginx" as N
+participant "proxy/main.py" as M
+participant "proxy/app.py" as A
+participant "proxy/utils.py" as U
+participant "External Service" as E
+
+Client -> N: HTTP Request
+N -> M: Forward Request
+M -> A: Initialize Application
+A -> U: Process Request
+U -> E: Forward to External Service
+E -> U: Return Response
+U -> A: Process Response
+A -> M: Prepare Final Response
+M -> N: Return Response
+N -> Client: HTTP Response
+@enduml</code></pre>
+    </div>
+
+    <h3>액티비티 다이어그램 (PlantUML)</h3>
+    <div class="diagram">
+        <pre><code>@startuml
+start
+:Client sends HTTP request;
+:Nginx receives request;
+:Request forwarded to main.py;
+:main.py initializes application;
+
+if (Request valid?) then (yes)
+  :app.py processes request;
+  :utils.py prepares request for external service;
+  :Request sent to external service;
+  :Response received from external service;
+  :Response processed;
+else (no)
+  :Generate error response;
+endif
+
+:Response returned to client;
+stop
+@enduml</code></pre>
+    </div>
+
+    <h2>6. 파이썬 초보자를 위한 문법 정리</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>문법</th>
+                <th>설명</th>
+                <th>코드 예시</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>모듈 임포트</td>
+                <td>다른 파일의 코드를 가져와 사용</td>
+                <td><code>from fastapi import FastAPI</code> (app.py에서 FastAPI 프레임워크 가져오기)</td>
+            </tr>
+            <tr>
+                <td>비동기 함수</td>
+                <td>여러 작업을 동시에 처리할 수 있는 함수</td>
+                <td><code>async def proxy_request(request):</code> (요청을 비동기적으로 처리)</td>
+            </tr>
+            <tr>
+                <td>클래스 정의</td>
+                <td>관련 데이터와 기능을 묶어 객체 생성</td>
+                <td><code>class ProxyConfig:</code> (프록시 설정을 관리하는 클래스)</td>
+            </tr>
+            <tr>
+                <td>예외 처리</td>
+                <td>오류 상황을 감지하고 대응</td>
+                <td><code>try: ... except Exception as e:</code> (요청 처리 중 오류 처리)</td>
+            </tr>
+            <tr>
+                <td>with 구문</td>
+                <td>자원을 안전하게 관리</td>
+                <td><code>with httpx.AsyncClient() as client:</code> (HTTP 클라이언트 자동 정리)</td>
+            </tr>
+            <tr>
+                <td>f-문자열</td>
+                <td>변수를 문자열에 쉽게 삽입</td>
+                <td><code>f"Forwarding request to {target_url}"</code> (동적 URL 로깅)</td>
+            </tr>
+            <tr>
+                <td>데코레이터</td>
+                <td>함수에 추가 기능 부여</td>
+                <td><code>@app.route("/proxy")</code> (특정 경로에 함수 연결)</td>
+            </tr>
+            <tr>
+                <td>딕셔너리</td>
+                <td>키-값 쌍으로 데이터 저장</td>
+                <td><code>headers = {"User-Agent": "proxy-lite"}</code> (HTTP 헤더 설정)</td>
+            </tr>
+            <tr>
+                <td>리스트 컴프리헨션</td>
+                <td>간결하게 리스트를 생성하는 방법</td>
+                <td><code>allowed_headers = [h for h in headers if h.lower() in ALLOWED_HEADERS]</code></td>
+            </tr>
+            <tr>
+                <td>람다 함수</td>
+                <td>이름 없는 간단한 함수</td>
+                <td><code>sorted_keys = sorted(params.keys(), key=lambda x: x.lower())</code></td>
+            </tr>
+            <tr>
+                <td>환경 변수 사용</td>
+                <td>시스템 환경에서 값 가져오기</td>
+                <td><code>target_url = os.environ.get("TARGET_URL", "https://default-api.com")</code></td>
+            </tr>
+            <tr>
+                <td>기본 인자</td>
+                <td>함수 호출 시 값을 제공하지 않을 때 사용될 기본값</td>
+                <td><code>def create_proxy(config=None, timeout=30):</code></td>
+            </tr>
+            <tr>
+                <td>JSON 처리</td>
+                <td>JSON 데이터를 파이썬 객체로 변환</td>
+                <td><code>response_data = json.loads(response.content)</code></td>
+            </tr>
+            <tr>
+                <td>정규표현식</td>
+                <td>문자열 패턴 검색 및 수정</td>
+                <td><code>import re</code><br><code>pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+</code></td>
+            </tr>
+            <tr>
+                <td>로깅</td>
+                <td>프로그램 실행 중 정보 기록</td>
+                <td><code>logging.info(f"Received request for {url}")</code></td>
+            </tr>
+            <tr>
+                <td>비동기 컨텍스트 매니저</td>
+                <td>비동기 작업에서 자원 관리</td>
+                <td><code>async with aiohttp.ClientSession() as session:</code></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
