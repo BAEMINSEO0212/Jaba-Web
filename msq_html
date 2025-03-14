@@ -1,0 +1,260 @@
+<!-- 머신러닝 기초_ 2차 문제 코드 해석/분석-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Structures Quiz Adventure</title> <!-- 게임 이름 -->
+    <!-- 영역 구죽, 디자인-->
+    <style> 
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);  
+            width: 90%;
+            max-width: 700px;
+            padding: 30px;
+            text-align: center;
+            color: #333;
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #2a5298;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 20px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress {
+            background: linear-gradient(90deg, #2a5298, #1e3c72);
+            height: 100%;
+            width: 0;
+            transition: width 0.5s ease;
+        }
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1em;
+            border: 2px solid #2a5298;
+            border-radius: 5px;
+            width: 200px;
+            margin: 10px 0;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus {
+            border-color: #1e3c72;
+            outline: none;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 1em;
+            background: #2a5298;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background: #1e3c72;
+            transform: scale(1.05);
+        }
+        .feedback {
+            margin-top: 15px;
+            font-size: 1em;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+        }
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .score {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #2a5298;
+        }
+        .final-score {
+            display: none;
+            font-size: 2em;
+            color: #2a5298;
+            margin-top: 20px;
+            animation: bounceIn 0.5s ease;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            60% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+    </style>
+
+</head>
+<body>
+    <canvas id="confetti"></canvas>
+    <div class="quiz-container">
+        <h1>Data Structures Quiz Adventure 🚀</h1>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="question" id="question"></div>
+        <input type="text" id="answer" placeholder="Type your answer here">
+        <button onclick="checkAnswer()">Submit</button>
+        <div class="feedback" id="feedback"></div>
+        <div class="score" id="score">Score: 0</div>
+        <div class="final-score" id="final-score"></div>
+    </div>
+
+    <!-- 문제-->
+    <script>
+        const questions = [
+            { question: "An ___ is a collection of elements stored in contiguous memory locations.", answer: "array", explanation: "An array is a data structure that stores elements in contiguous memory, allowing for efficient indexing." },
+            { question: "The time complexity of accessing an element in an array by index is ___", answer: "O(1)", explanation: "Arrays provide constant-time access to elements using their index." },
+            { question: "In a ___ linked list, each node points to the next node, and the last node points to null.", answer: "singly", explanation: "A singly linked list has nodes where each node points to the next, with the last node pointing to null." },
+            { question: "The time complexity of inserting an element at the beginning of a linked list is ___", answer: "O(1)", explanation: "Inserting at the beginning of a linked list is constant time, as it only requires updating pointers." },
+            { question: "An array's size is ___ once it is declared, unlike a linked list.", answer: "fixed", explanation: "Arrays have a fixed size once declared, while linked lists can grow dynamically." },
+            { question: "In a ___ linked list, each node points to both the next and previous nodes.", answer: "doubly", explanation: "A doubly linked list allows traversal in both directions by having pointers to both next and previous nodes." },
+            { question: "The time complexity of searching for an element in an unsorted array is ___", answer: "O(n)", explanation: "Searching in an unsorted array requires checking each element, leading to linear time complexity." },
+            { question: "A ___ linked list has its last node pointing back to the first node, forming a circle.", answer: "circular", explanation: "A circular linked list connects the last node to the first, enabling continuous traversal." },
+            { question: "The main advantage of a linked list over an array is its ability to ___ grow or shrink.", answer: "dynamically", explanation: "Linked lists can dynamically grow or shrink by adding or removing nodes, unlike fixed-size arrays." },
+            { question: "The time complexity of deleting an element from the end of a singly linked list is ___ if the tail pointer is not maintained.", answer: "O(n)", explanation: "Without a tail pointer, deleting from the end requires traversing the list to find the second-to-last node, which is linear time." },
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const totalQuestions = questions.length;
+
+        function loadQuestion() {
+            const questionElement = document.getElementById("question");
+            const feedbackElement = document.getElementById("feedback");
+            const progressElement = document.getElementById("progress");
+            const answerInput = document.getElementById("answer");
+
+            if (currentQuestionIndex < totalQuestions) {
+                questionElement.innerHTML = questions[currentQuestionIndex].question;
+                feedbackElement.style.display = "none";
+                answerInput.value = "";
+                progressElement.style.width = `${((currentQuestionIndex + 1) / totalQuestions) * 100}%`;
+            } else {
+                showFinalScore();
+            }
+        }
+
+        function checkAnswer() {
+            const answerInput = document.getElementById("answer").value.trim().toLowerCase();
+            const correctAnswer = questions[currentQuestionIndex].answer.toLowerCase();
+            const feedbackElement = document.getElementById("feedback");
+            const scoreElement = document.getElementById("score");
+
+            feedbackElement.style.display = "block";
+            if (answerInput === correctAnswer) {
+                feedbackElement.className = "feedback correct";
+                feedbackElement.innerHTML = "🎉 Correct! Well done!";
+                score += 10;
+                scoreElement.innerHTML = `Score: ${score}`;
+                triggerConfetti();
+            } else {
+                feedbackElement.className = "feedback incorrect";
+                feedbackElement.innerHTML = `❌ Incorrect. The correct answer is "${questions[currentQuestionIndex].answer}". ${questions[currentQuestionIndex].explanation}`;
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuestion();
+            }, 2000);
+        }
+
+        function showFinalScore() {
+            const quizContainer = document.querySelector(".quiz-container");
+            quizContainer.innerHTML = `
+                <h1>Quiz Complete! 🎉</h1>
+                <div class="final-score" id="final-score">Your Final Score: ${score}/${totalQuestions * 10}</div>
+                <button onclick="location.reload()">Play Again</button>
+            `;
+            triggerConfetti();
+        }
+
+        function triggerConfetti() {
+            const canvas = document.getElementById("confetti");
+            const ctx = canvas.getContext("2d");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const confettiCount = 200;
+            const confetti = [];
+
+            for (let i = 0; i < confettiCount; i++) {
+                confetti.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    r: Math.random() * 10 + 2,
+                    d: Math.random() * confettiCount,
+                    color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                    tilt: Math.random() * 10 - 10,
+                });
+            }
+
+            function drawConfetti() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                confetti.forEach((conf, index) => {
+                    conf.y += 2;
+                    conf.x += Math.sin(conf.d) * 0.5;
+                    conf.d += 0.05;
+                    conf.tilt += 0.1;
+
+                    ctx.beginPath();
+                    ctx.fillStyle = conf.color;
+                    ctx.arc(conf.x, conf.y, conf.r, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    if (conf.y > canvas.height) confetti.splice(index, 1);
+                });
+
+                if (confetti.length > 0) requestAnimationFrame(drawConfetti);
+            }
+
+            drawConfetti();
+        }
+
+        // Load the first question when the page loads
+        window.onload = loadQuestion;
+    </script>
+</body>
+</html>
