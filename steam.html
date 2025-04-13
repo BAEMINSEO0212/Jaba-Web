@@ -1,64 +1,75 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <viewport charset="UTF-8">
-        <meta name=“배민서” content=“20220988”> <!-- 정보 추가 가능, 이름과 학번-->
-        <base href="http://127.0.0.1:5500"> <!-- 기본 경로 미리 설정 -->
-        <title> steam </title>
-        <script type="JS TEST.js" src="Basic_js_test.js"></script>
-
+        <meat charset='UTF-8'> <!-- 페이지 번전을 UTF-8로 설정-->
+        <meta name=“배민서” content=“20220988”>
+        <title>welcome to the steam</title><!-- 페이지 이름-->
     </head>
-
     <body style="background-color: black;">
-        <!--TOP부분-->
-        <div style="display: flex; justify-content: center;" >
-            <img src="steam_logo.png" width="200" height="50">
-            <h3 style="font-size: 24px; font-weight: bold; color: white;"> 게임소개 게임메뉴 게임종류 게임리뷰 내상점  </h3>
+        <!--top부분-->
+          <div style="display:flex; justify-content: center;">
+            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                        <a class="navbar-brand" href="#">
+                          <img src="steam img/steam title2.png.svg" alt="Bootstrap" width="75" height="40" onmouseover="over(this)" onmouseout="out(this)">
+                        </a>
+                    <div class="container-fluid">
+                      <a class="navbar-brand" href="#">Navbar</a>
+                      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                      </button>
+                      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                          <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="http://127.0.0.1:5500/steam.html">홈페이지</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="#">스팀소개</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="#">다운로드</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="#">게시판</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="#">외부사이트</a>
+                          </li>
+                          <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">메뉴</a>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">Action</a></li>
+                              <li><a class="dropdown-item" href="#">Another action</a></li>
+                              <li><hr class="dropdown-divider"></li>
+                              <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            </ul>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                          </li>
+                        </ul>
+                        <form class="d-flex" role="search" onsubmit="return googleSearch();">
+                          <input class="form-control me-2" id="search_input" name="q" type="search" placeholder="키워드 입력" aria-label="Search">
+                          <button class="btn btn-outline-success" id="search_btn" type="submit">검색</button>
+                          </form>
+                      </div>
+                    </div>
+                  </nav>
+                  </div>
+        <hr><!--section부분-->
+        <div style="display: flex; justify-self: center;">
+            <img src="steam img/steam background.jpg" height="540" width="960">
+
+        </div>
+        <div>
+            
         </div>
 
-        <!--SICTION부분-->
-        <hr>
-        <div style="display: flex; justify-content: center;">
-            <img src="steam background.jpg" width="800" height="700">
-        </div>
-        <div style="display:flex; justify-content: center; color: white;">
-            <table border="1">
-                <caption> 인기캐릭터 </caption>
-                <tbody>
-                    <tr bgcolor="red">
-                        <td>사이온</td>
-                        <td>아리</td>
-                        <td>가렌</td>
-                        <td>가렌2</td>
-                        <td>가렌3</td>
-                    </tr>
-                    <tr bgcolor="grey">
-                        <td colspan="5">
-                            <a style="text-decoration: none; color: inherit" href="작업중.html" target="_self">업데이트현황</a>
-                        </td>
+        
 
-                    </tr>
-                    <tr>
-                        <td bgcolor="blue"><b>카직스</b></td> 
-                        <td>루시안</td>
-                        <td>루시안2</td>
-                        <td><img src="stardew valley title image.jpg" width="90" height="70"></td>
-                        <td colspan="2"><font size="13">바이 1, 2</font></td>
-                    </tr>
-                </tbody>
-            </table>
+        <hr><!--footer부분-->
+        <div style="display: flex; justify-self: center;">
+            <h3 style="font-size: 24px; color: white;"> 중간고사 공부용 </h3>
         </div>
-
-        <!--FOOTER부분-->
-        <hr>
-        <div style=" text-align: left; background-color: white;">
-            <h3 style="font-size: 12px; font-style: italic; color: black;"> 제작자: 배민서(성결대 미소과) </h3>
-            <h3 style="font-size: 12px; font-style: italic; color: black;"> 제작일: 2025년 03월 19일 </h3>
-            <h3 style="font-size: 12px; font-style: italic; color: black;"> 수정일: 2025년 03월 19일 </h3>
-            <h3 style="font-size: 12px; font-style: italic; color: black;"> 문의사항: bms030212@sungkyul.ac.kr  </h3>
-        </div>
- 
     </body>
+
 </html>
-
-
