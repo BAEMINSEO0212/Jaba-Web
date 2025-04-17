@@ -21,6 +21,7 @@
             divClock.style.color="red";
             }
         setTimeout(show_clock, 1000); //1초마다 갱신
+
     }
     function over(obj) {
         obj.src="lol/lol title.png";
