@@ -8,6 +8,17 @@ function init(){ // 로그인 폼에 쿠키에서 가져온 아이디 입력
     }
     session_check(); // 세션 체크
 }
+
+function init_logined(){
+    if(sessionStorage){
+        decrypt_text(); // 복호화 함수
+    }
+    else{
+        alert("세션 스토리지 지원 x");
+    }
+}
+
+
 const check_xss = (input) => {
     // DOMPurify 라이브러리 로드 (CDN 사용)
     const DOMPurify = window.DOMPurify;
@@ -40,6 +51,11 @@ const check_input = () => {
     const sanitizedEmail = check_xss(emailValue);
     // check_xss 함수로 비밀번호 Sanitize
 
+    const payload = {
+        id: emailValue,
+        exp: Math.floor(Date.now() / 1000) + 3600 // 1시간 (3600초)
+    };
+    const jwtToken = generateJWT(payload);
 
     if (emailValue === '') {
         alert('이메일을 입력하세요.');
@@ -87,6 +103,7 @@ const check_input = () => {
     console.log('이메일:', emailValue);
     console.log('비밀번호:', passwordValue);
     session_set(); // 세션 생성    
+    localStorage.setItem('jwt_token', jwtToken);
     loginForm.submit();
 };
 
@@ -111,9 +128,29 @@ function getCookie(name) {
     return ;
 }
 
+function session_set() { //세션 저장
+    let session_id = document.querySelector("#typeEmailX"); // DOM 트리에서 ID 검색
+    let session_pass = document.querySelector("#typePasswordX"); // DOM 트리에서 pass 검색
+        if (sessionStorage) {
+            let en_text = encrypt_text(session_pass.value);
+            sessionStorage.setItem("Session_Storage_id", session_id.value);
+            sessionStorage.setItem("Session_Storage_pass", en_text);
+        } else {
+            alert("로컬 스토리지 지원 x");
+        }
+}
+
+function init_logined(){
+    if(sessionStorage){
+        decrypt_text(); // 복호화 함수
+    }
+    else{
+        alert("세션 스토리지 지원 x");
+    }
+}
 function logout(){
     session_del(); // 세션 삭제
-     location.href='../steam.html'; // 로그아웃 후 이동할 페이지
+    location.href='../steam.html'; // 로그아웃 후 이동할 페이지
 }
 
 document.getElementById("login_btn").addEventListener('click', check_input);
