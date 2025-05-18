@@ -155,6 +155,3 @@ function logout(){
 
 document.getElementById("login_btn").addEventListener('click', check_input);
 
-
-
-
