@@ -14,7 +14,8 @@
 ## 25년 5월 07일 10주차 강의진행 -> 쿠키 ID(식별자), steam_index_login.html 수정, steam_session.js 추가
 ## 수정사항 - iogout <body class="text-center" onload="logout();">에서 logout삭제후 아래에 버튼 형식으로 연동되게 제작하기
 ## 25년 5월 14일 11주차 강의진행 -추가
-## 25년 5월 18일 로그인 오류수정 1차(로그인 버튼 후 steam_index_login.html로 페이지 이동 불가/ 수정 중)
+## 25년 5월 18일 로그인 오류수정 1차(로그인 버튼 후 steam_index_login.html로 페이지 이동 불가중)
+## 25년 5월 21일 12주차 강의진행 (모델화, 회원가입 기능 추가)
 
 
 
