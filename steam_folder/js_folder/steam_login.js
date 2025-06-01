@@ -146,12 +146,12 @@ export function session_set() { //세션 저장
 
 function logout(){
     session_del(); // 세션 삭제
-    location.href='../steam.html'; // 로그아웃 후 이동할 페이지
+    location.href='../steam_main.html'; // 로그아웃 후 이동할 페이지
 }
 
 document.getElementById("login_btn").addEventListener('click', check_input);
 
 document.addEventListener('DOMContentLoaded', () => {
-    checkAuth();
-    init_logined();
+    init();
 });
+

@@ -7,7 +7,7 @@ function join(){ // 회원가입 기능
     let password = document.querySelector("#form3Example4c");
     let re_password = document.querySelector("#form3Example4cd");
     let agree = document.querySelector("#form2Example3c");
-    form.action = "../index.html"; // 로그인 성공 시 이동
+    form.action = "../steam_main.html"; // 로그인 성공 시 이동
     form.method = "get"; // 전송 방식
     if(name.value.length === 0 || email.value.length === 0 || password.value.length === 0 || re_password.length === 0){
         alert("회원가입 폼에 모든 정보를 입력해주세요.");
