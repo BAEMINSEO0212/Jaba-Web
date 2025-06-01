@@ -1,3 +1,5 @@
+import { encrypt_text } from './crypto.js'; // decrypt_text도 필요하면 함께 import
+
 export function session_set(){ //세션 저장(객체)
     let id = document.querySelector("#typeEmailX");
     let password = document.querySelector("#typePasswordX");
@@ -44,7 +46,9 @@ export function session_check() { //세션 검사
 
 function session_del() {//세션 삭제
     if (sessionStorage) {
-        sessionStorage.removeItem("Session_Storage_test");
+        sessionStorage.removeItem("Session_Storage_id");
+        sessionStorage.removeItem("Session_Storage_object");
+        sessionStorage.removeItem("Session_Storage_pass");
         alert('로그아웃 버튼 클릭 확인 : 세션 스토리지를 삭제합니다.');
     } 
     else {

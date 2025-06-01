@@ -19,14 +19,14 @@ export function encrypt_text(password){
     const k = "key"; // 클라이언트 키
     const rk = k.padEnd(32, " "); // AES256은 key 길이가 32
     const b = password;
-    const eb = this.encodeByAES256(rk, b); // 실제 암호화
-    return eb;
+    const eb = encodeByAES256(rk, b); // 실제 암호화
     console.log(eb);
+    return eb;
 }
 export function decrypt_text(){
     const k = "key"; // 서버의 키
     const rk = k.padEnd(32, " "); // AES256은 key 길이가 32
     const eb = session_get();
-    const b = this.decodeByAES256(rk, eb); // 실제 복호화
+    const b = decodeByAES256(rk, eb); // 실제 복호화
     console.log(b);
 }
