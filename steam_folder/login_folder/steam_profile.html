@@ -12,6 +12,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/v4-shims.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.5/purify.min.js"></script>
+    <link rel="stylesheet" href="../css_folder/steam_profile.css">
+
 
     <!-- 페이지별 스타일 -->
     <style>
@@ -49,7 +51,7 @@
                             <a class="nav-link active" aria-current="page" href="../TEST.html" target="_blank">상점</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="steam_profile.html" target='_blank'>프로필</a>
+                            <a class="nav-link" href="profile.html" target='_blank'>프로필</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -77,59 +79,80 @@
     </div>
 
     <!-- SECTION부분 -->
-    <div class="container mt-3"> 
-        <hr>
-        <div class="text-center"> 
-            <img src="../steam_img/steam_background.jpg" alt="steam background" class="main-content-image img-fluid"> <!-- img-fluid 추가 -->
+<section class="vh-100" style="background-color: #f4f5f7;">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-lg-6 mb-4 mb-lg-0">
+        <div class="card mb-3" style="border-radius: .5rem;">
+          <div class="row g-0">
+            <div class="col-md-4 gradient-custom text-center text-white"style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="Avatar" class="img-fluid my-5" style="width: 80px;" />
+              <h5>배민서</h5>
+              <p>성결대 미소과 2학년</p>
+              <i class="far fa-edit mb-5"></i>
+            </div>
+            <div class="col-md-8">
+              <div class="card-body p-4">
+                <h6>정보</h6>
+                <hr class="mt-0 mb-4">
+                <div class="row pt-1">
+                  <div class="col-6 mb-3">
+                    <h6>이메일</h6>
+                    <p class="text-muted">bms030212@sungkyul.ac.kr</p>
+                  </div>
+                  <div class="col-6 mb-3">
+                    <h6>전화번호</h6>
+                    <p class="text-muted">010-7413-8891</p>
+                  </div>
+                </div>
+                <h6>프로젝트</h6>
+                <hr class="mt-0 mb-4">
+                <div class="row pt-1">
+                  <div class="col-6 mb-3">
+                    <h6>강의자료</h6>
+                    <p class="text-muted">자바웹프로그래밍</p>
+                  </div>
+                  <div class="col-6 mb-3">
+                    <h6>경진대회</h6>
+                    <p class="text-muted">멀티 에이전트 시스템</p>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-start">
+                  <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
+                  <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>
+                  <a href="#!"><i class="fab fa-instagram fa-lg"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <hr>
-        <div class="d-flex justify-content-center">
-            <table class="table table-striped table-bordered" style="width: 80%;">
-                <caption style="caption-side: top; text-align: center;">게임 장르 예시</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">순서</th>
-                        <th scope="col">1</th>
-                        <th scope="col">2</th>
-                        <th scope="col">3</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>방치형</td>
-                        <td>전략형</td>
-                        <td>액션</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>방치형</td>
-                        <td>전략형</td>
-                        <td>액션</td>
-                    </tr>
-                    <tr>
-            <th scope="row">3</th>
-            <td>방치형</td>
-            <td><img src="../steam_img/steam_title.png" alt="Logo" width="30" height="30"></td>
-            <td>액션</td>
-          </tr>
-          <tr>
-            <th scope="row">4</th>
-            <td colspan="3"><a href="steam_logout.html">로그아웃 페이지로 가기</a></td>
-          </tr>
-                </tbody>
-            </table>
+        <div class="map-section">
+          <h4>위치 정보</h4>
+          <div id="map" style="width:100%;height:400px;"></div>
+          <p><em>지도를 클릭해주세요!</em></p>
+          <div id="clickLatlng"></div>
         </div>
+      </div>
     </div>
+  </div>
+</section>
+
+
+
+
+
     <!--FOOTER부분-->
     <div class="container">
         <hr>
         <div class="text-center py-3">
-            <h3 style="font-size: 24px; font-style: italic;"> 기말고사 대비용 실습 잘하자 제발!!</h3>
+            <h3 style="font-size: 24px; font-style: italic;"> 회원님의 개인 프로필</h3>
             <p id="username_display_area" style="font-weight: bold; margin-top: 10px;"></p>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
     <script type="module" src="../js_folder/steam_login2.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c30e6b015b788142c577e07fac643945"></script>
+    <script type="text/javascript" src="../js_folder/map.js"></script>
+
 </body>
 </html>

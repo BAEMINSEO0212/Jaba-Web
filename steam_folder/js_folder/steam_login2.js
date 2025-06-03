@@ -17,27 +17,16 @@ import { checkAuth } from './jwt_token.js';         // JWT 토큰 기반 사용�
 function init_logined_for_index_page() {
     console.log("steam_login2.js - init_logined_for_index_page() 함수 실행");
     if (sessionStorage) {
-        // 세션 스토리지에서 암호화된 데이터(예: 비밀번호 또는 사용자 정보 객체)를 가져옵니다.
         const encryptedData = session_get(); // session_get은 'Session_Storage_pass' 값을 반환하도록 되어 있음
-
         if (encryptedData) {
             try {
                 const decryptedData = decrypt_text(encryptedData);
                 console.log("로그인 후 페이지 - 복호화된 데이터:", decryptedData);
-
-                // 여기서 decryptedData를 사용하여 페이지에 사용자 관련 정보를 표시하거나
-                // 다른 UI 업데이트를 수행할 수 있습니다.
-                // 예: const userObject = JSON.parse(decryptedData);
-                // 예: document.getElementById('username_display').textContent = userObject.id;
-
             } catch (error) {
                 console.error("데이터 복호화 중 오류 발생:", error);
-                // 복호화 실패 시 예외 처리 (예: 사용자에게 알림, 로그인 페이지로 리다이렉트 등)
             }
         } else {
             console.log("세션에서 가져올 암호화된 데이터가 없습니다.");
-            // 이 경우, checkAuth()에서 이미 처리되었을 가능성이 높지만,
-            // 추가적인 방어 로직을 넣을 수 있습니다. (예: 로그인 페이지로 강제 이동)
         }
     } else {
         alert("세션 스토리지를 지원하지 않습니다. 일부 기능이 제한될 수 있습니다.");

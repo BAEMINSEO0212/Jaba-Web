@@ -19,11 +19,11 @@ export function session_set(){ //세션 저장(객체)
         alert("세션 스토리지 지원 x");
     }
 }
-export function session_set2(obj){ //세션 저장(객체)
+export function session_set2(userObject) { // 인자로 SignUp 객체를 받음
     if (sessionStorage) {
-        const objString = JSON.stringify(obj); // 객체 -> JSON 문자열 변환
-        // let en_text = await encrypt_text(objString); // 암호화
-        sessionStorage.setItem("Session_Storage_object", objString);
+        const userObjectString = JSON.stringify(userObject); // 객체를 JSON 문자열로 변환
+        sessionStorage.setItem("Session_Storage_object", userObjectString);
+        console.log("session_set2: 객체를 세션에 저장 - ", userObjectString);
     } else {
         alert("세션 스토리지 지원 x");
     }
