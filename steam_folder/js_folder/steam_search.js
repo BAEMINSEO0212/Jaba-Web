@@ -16,4 +16,8 @@ function googleSearch() {
     window.open(googleSearchUrl, "_blank"); // 새로운 창에서 열기.
     return false;
 }
-    
+
+
+
+
+

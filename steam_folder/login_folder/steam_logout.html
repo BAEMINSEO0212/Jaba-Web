@@ -21,11 +21,13 @@
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
           <div class="card bg-dark text-white" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center">
-              <div class="mb-md-5 mt-md-4 pb-5">
-                <p class="text-white-50 mb-5">로그아웃 하시겠습니까?</p>
-                <form method="get" action="../steam_main.html" id="login_form" onload="logout()";>
-                  <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" id="login_btn" type="submit">로그아웃</button>
-                </form>
+              <div class="mb-md-5 mt-md-4 pb-5"> <!-- 여백 유지 -->
+                <h2 class="fw-bold mb-4 text-uppercase">로그아웃</h2> <!-- 제목 추가 -->
+                <p class="text-white-50 mb-5">정말로 로그아웃 하시겠습니까?</p>
+                <!-- form 태그 제거 -->
+                <div> <!-- 버튼들을 감싸는 div (정렬 용이) -->
+                  <button class="btn btn-outline-danger btn-lg px-5" id="confirm_logout_action_btn" type="button">로그아웃</button>
+                </div>
               </div>
             </div>
           </div>
@@ -33,7 +35,7 @@
       </div>
     </div>
   </section>
-  <script type="module" src="../js_folder/steam_login2.js"></script>  
+  <script type="module" src="../js_folder/steam_logout.js"></script>
 </body>
 </html>
 

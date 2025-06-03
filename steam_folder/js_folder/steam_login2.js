@@ -1,157 +1,119 @@
-import { session_set, session_get, session_check } from './steam_search.js';
-import { encrypt_text, decrypt_text } from './crypto.js';
-import { generateJWT, checkAuth } from './jwt_token.js';
+// js_folder/steam_login2.js
+// 이 파일은 steam_index_login.html (로그인 후 페이지)에서 사용됩니다.
 
-function init(){ // 로그인 폼에 쿠키에서 가져온 아이디 입력
-    const emailInput = document.getElementById('typeEmailX');
-    const idsave_check = document.getElementById('idSaveCheck');
-    let get_id = getCookie("id");
-    if(get_id) {
-        emailInput.value = get_id;
-        idsave_check.checked = true;
-    }
-    session_check(); // 세션 체크
-}
+// 필요한 모듈 import
+import { session_get } from './steam_session.js';    // 세션에서 데이터를 가져오는 함수 (Session_Storage_pass 용)
+import { decrypt_text } from './crypto.js';         // 암호화된 데이터를 복호화하는 함수
+import { checkAuth } from './jwt_token.js';         // JWT 토큰 기반 사용자 인증 상태 확인 함수
+// import { logout } from './steam_session.js'; // 만약 steam_session.js에 logout 함수가 export 되어 있다면
+                                             // 또는 logout 함수를 이 파일에 직접 정의
 
-function init_logined(){
-    if(sessionStorage){
-        decrypt_text(); // 복호화 함수
-    }
-    else{
-        alert("세션 스토리지 지원 x");
-    }
-}
+// (만약 이 페이지에서 이미지 호버, 팝업, 검색 등의 기능이 필요하다면 해당 JS 파일에서 함수 import)
+// 예: import { over, out } from './steam_image_hover.js';
+// 예: import { googleSearch } from './steam_search.js';
 
 
-const check_xss = (input) => {
-    // DOMPurify 라이브러리 로드 (CDN 사용)
-    const DOMPurify = window.DOMPurify;
-    // 입력 값을 DOMPurify로 sanitize
-    const sanitizedInput = DOMPurify.sanitize(input);
-    // Sanitized된 값과 원본 입력 값 비교
-    if (sanitizedInput !== input) {
-    // XSS 공격 가능성 발견 시 에러 처리
-        alert('XSS 공격 가능성이 있는 입력값을 발견했습니다.');
-        return false;
-        }
-    // Sanitized된 값 반환
-    return sanitizedInput;
-};
+// 로그인 후 페이지를 위한 초기화 함수
+function init_logined_for_index_page() {
+    console.log("steam_login2.js - init_logined_for_index_page() 함수 실행");
+    if (sessionStorage) {
+        // 세션 스토리지에서 암호화된 데이터(예: 비밀번호 또는 사용자 정보 객체)를 가져옵니다.
+        const encryptedData = session_get(); // session_get은 'Session_Storage_pass' 값을 반환하도록 되어 있음
 
+        if (encryptedData) {
+            try {
+                const decryptedData = decrypt_text(encryptedData);
+                console.log("로그인 후 페이지 - 복호화된 데이터:", decryptedData);
 
-const check_input = () => {
-    const loginForm = document.getElementById('login_form');
-    const loginBtn = document.getElementById('login_btn');
-    const emailInput = document.getElementById('typeEmailX');
-    const passwordInput = document.getElementById('typePasswordX');
-    // 전역 변수 추가, 맨 위 위치
-    const idsave_check = document.getElementById('idSaveCheck');
-    const c = '아이디, 패스워드를 체크합니다';
-    alert(c);
-    const emailValue = emailInput.value.trim();
-    const passwordValue = passwordInput.value.trim();
-    const sanitizedPassword = check_xss(passwordValue);
-    // check_xss 함수로 비밀번호 Sanitize
-    const sanitizedEmail = check_xss(emailValue);
-    // check_xss 함수로 비밀번호 Sanitize
+                // 여기서 decryptedData를 사용하여 페이지에 사용자 관련 정보를 표시하거나
+                // 다른 UI 업데이트를 수행할 수 있습니다.
+                // 예: const userObject = JSON.parse(decryptedData);
+                // 예: document.getElementById('username_display').textContent = userObject.id;
 
-    const payload = {
-        id: emailValue,
-        exp: Math.floor(Date.now() / 1000) + 3600 // 1시간 (3600초)
-    };
-    const jwtToken = generateJWT(payload);
-
-    if (emailValue === '') {
-        alert('이메일을 입력하세요.');
-        return false;
-        }
-    if (passwordValue === '') {
-        alert('비밀번호를 입력하세요.');
-        return false;
-        }
-    if (emailValue.length < 5) {
-        alert('아이디는 최소 5글자 이상 입력해야 합니다.');
-        return false;
-        }
-    if (passwordValue.length < 12) {
-        alert('비밀번호는 반드시 12글자 이상 입력해야 합니다.');
-        return false;
-        }
-        const hasSpecialChar = passwordValue.match(/[!,@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/) !== null;
-    if (!hasSpecialChar) {
-        alert('패스워드는 특수문자를 1개 이상 포함해야 합니다.');
-        return false;
-        }
-    const hasUpperCase = passwordValue.match(/[A-Z]+/) !== null;
-    const hasLowerCase = passwordValue.match(/[a-z]+/) !== null;
-    if (!hasUpperCase || !hasLowerCase) {
-        alert('패스워드는 대소문자를 1개 이상 포함해야 합니다.');
-        return false;
-        }
-    if (!sanitizedEmail) {
-        // Sanitize된 비밀번호 사용
-        return false;
-        }
-    if (!sanitizedPassword) {
-        // Sanitize된 비밀번호 사용
-        return false;
-        }
-    if(idsave_check.checked == true) { // 아이디 체크 o
-        alert("쿠키를 저장합니다.", emailValue);
-        setCookie("id", emailValue, 1); // 1일 저장
-        alert("쿠키 값 :" + emailValue);
-        }
-    else{ // 아이디 체크 x
-        setCookie("id", emailValue, 0); //날짜를 0 - 쿠키 삭제
-        }    
-    console.log('이메일:', emailValue);
-    console.log('비밀번호:', passwordValue);
-    session_set(); // 세션 생성    
-    localStorage.setItem('jwt_token', jwtToken);
-    loginForm.submit();
-};
-
-function setCookie(name, value, expiredays) {
-    var date = new Date();
-    date.setDate(date.getDate() + expiredays);
-    document.cookie = escape(name) + "=" + escape(value) + "; expires=" + date.toUTCString() + ";path=/" + ";SameSite=None; Secure";
-}
-    
-function getCookie(name) {
-    var cookie = document.cookie;
-    console.log("쿠키를 요청합니다.");
-    if (cookie != "") {
-        var cookie_array = cookie.split("; ");
-        for (var index in cookie_array) {
-            var cookie_name = cookie_array[index].split("=");
-            if (cookie_name[0] === name) {
-                return cookie_name[1];
+            } catch (error) {
+                console.error("데이터 복호화 중 오류 발생:", error);
+                // 복호화 실패 시 예외 처리 (예: 사용자에게 알림, 로그인 페이지로 리다이렉트 등)
             }
-        }
-    }
-    return;
-}
-
-export function session_set() { //세션 저장
-    let session_id = document.querySelector("#typeEmailX"); // DOM 트리에서 ID 검색
-    let session_pass = document.querySelector("#typePasswordX"); // DOM 트리에서 pass 검색
-        if (sessionStorage) {
-            let en_text = encrypt_text(session_pass.value);
-            sessionStorage.setItem("Session_Storage_id", session_id.value);
-            sessionStorage.setItem("Session_Storage_pass", en_text);
         } else {
-            alert("로컬 스토리지 지원 x");
+            console.log("세션에서 가져올 암호화된 데이터가 없습니다.");
+            // 이 경우, checkAuth()에서 이미 처리되었을 가능성이 높지만,
+            // 추가적인 방어 로직을 넣을 수 있습니다. (예: 로그인 페이지로 강제 이동)
         }
+    } else {
+        alert("세션 스토리지를 지원하지 않습니다. 일부 기능이 제한될 수 있습니다.");
+    }
 }
 
-function logout(){
-    session_del(); // 세션 삭제
-    location.href='../steam_main.html'; // 로그아웃 후 이동할 페이지
+// (만약 steam_index_login.html의 로그아웃 버튼이 이 파일의 JS로 제어된다면)
+// 로그아웃 버튼에 대한 이벤트 리스너 추가
+const logoutButton = document.getElementById('logout_btn'); // HTML에 logout_btn ID가 있어야 함
+if (logoutButton) {
+    // logout 함수는 steam_session.js에서 import 하거나 여기에 직접 정의
+    // 예시: import { logout } from './steam_session.js';
+    // 또는 아래처럼 직접 정의
+    function handleLogout() {
+        console.log("로그아웃 버튼 클릭됨 (steam_login2.js)");
+        // steam_session.js의 session_del()을 직접 호출하거나,
+        // steam_session.js에서 export된 logout 함수를 호출
+        // 예: import { session_del } from './steam_session.js';
+        // session_del();
+        // localStorage.removeItem('jwt_token'); // JWT 토큰도 삭제
+        // location.href = '../steam_main.html'; // 메인 페이지로 이동
+
+        // 만약 steam_session.js에 export된 logout 함수가 있다면:
+        // import { logout } from './steam_session.js';
+        // logout();
+        // (위의 logout() 함수에는 localStorage.removeItem('jwt_token') 로직 추가 필요할 수 있음)
+
+        // 임시로 여기에 로그아웃 로직 직접 작성 (실제로는 steam_session.js의 함수 사용 권장)
+        if (sessionStorage) {
+            sessionStorage.removeItem("Session_Storage_id");
+            sessionStorage.removeItem("Session_Storage_object");
+            sessionStorage.removeItem("Session_Storage_pass");
+            console.log('세션 스토리지가 삭제되었습니다. (steam_login2.js)');
+        }
+        localStorage.removeItem('jwt_token');
+        console.log('JWT 토큰이 삭제되었습니다. (steam_login2.js)');
+        location.href = '../steam_main.html'; // 메인 페이지로 이동
+    }
+    logoutButton.addEventListener('click', handleLogout);
 }
 
-document.getElementById("login_btn").addEventListener('click', check_input);
 
+// DOM이 완전히 로드된 후 실행될 메인 로직
 document.addEventListener('DOMContentLoaded', () => {
-    checkAuth();
-    init_logined();
+    console.log("steam_index_login.html - DOM 로드 완료 (steam_login2.js 실행)");
+
+    // 1. 사용자 인증 상태 확인 (JWT 토큰 기반)
+    // checkAuth() 함수는 인증 실패 시 자동으로 로그인 페이지로 리다이렉트 시킬 수 있음
+    if (!checkAuth()) { // checkAuth가 boolean (인증 성공 여부)을 반환하고, 실패 시 리다이렉트 한다면
+        // 이미 checkAuth 내부에서 리다이렉트 되었을 것이므로, 추가 작업이 필요 없을 수 있음
+        // 또는, checkAuth가 리다이렉트 안 시키고 false만 반환한다면 여기서 명시적으로 리다이렉트
+        // console.log("인증 실패, 로그인 페이지로 이동합니다.");
+        // window.location.href = '../login_folder/steam_login.html'; // 경로 확인 필요
+        return; // 인증 실패 시 더 이상 진행하지 않음
+    }
+    console.log("사용자 인증 성공 (steam_login2.js)");
+
+    // 2. 로그인된 사용자를 위한 페이지 초기화 작업 수행
+    init_logined_for_index_page();
+
+    // 3. 이 페이지에서 필요한 다른 이벤트 리스너 등록 또는 초기화 코드 실행
+    // 예: 이미지 호버 기능 초기화 (steam_image_hover.js에서 over, out 함수 import 가정)
+    // const hoverImages = document.querySelectorAll('.some_hover_image_class');
+    // hoverImages.forEach(img => {
+    //     img.addEventListener('mouseover', function() { over(this); });
+    //     img.addEventListener('mouseout', function() { out(this); });
+    // });
+
+    // 예: 검색 기능 초기화 (steam_search.js에서 googleSearch 함수 import 가정)
+    // const searchForm = document.getElementById('some_search_form_id');
+    // if (searchForm) {
+    //     searchForm.addEventListener('submit', function(event) {
+    //         event.preventDefault(); // 기본 폼 제출 방지
+    //         if (googleSearch()) { // googleSearch가 boolean을 반환하며 새 창을 띄운다면
+    //             // 성공 처리 (필요시)
+    //         }
+    //     });
+    // }
 });
