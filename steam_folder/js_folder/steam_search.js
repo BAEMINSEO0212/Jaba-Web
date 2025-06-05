@@ -8,7 +8,7 @@ function googleSearch() {
         return false;
     }
 
-    const badWords = ["바보", "멍청이", "쓰레기", "나쁜놈", "개자식", "비속어"];
+    const badWords = ["바보", "병신", "시발", "멍청이", "쓰레기", "나쁜놈", "개자식", "개새끼", "좆같은", "좆", "씨발", "개새끼", "개새끼들", "개새끼야", "씨발놈", "씨발년", "씨발새끼"];
     const searchTermLower = searchTerm.toLowerCase();
 
     for (let i = 0; i < badWords.length; i++) {
