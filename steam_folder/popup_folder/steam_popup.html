@@ -6,9 +6,22 @@
     <script type="text/javascript" src="../js_folder/steam_popup.js" defer></script>
 </head>
 <body onload="show_clock();">
+    <!--
+        팝업창이 열릴 때 show_clock() 함수가 실행되어 실시간 시계가 표시됩니다.
+        steam_popup.js에서 show_clock 함수가 1초마다 현재 시간을 divClock에 갱신합니다.
+    -->
     <h1 class="display-1"><i class="bi bi-alarm"></i> 팝업창 확인<br><br></h1>
+    <!--
+        divClock: 실시간 시계가 표시되는 영역입니다.
+        Time: 추가적인 시계 또는 시간 정보가 표시될 수 있는 영역입니다(실제 사용 여부는 js에 따라 다름).
+    -->
     <h1 class="display-4"><div id="divClock" class="clock"></div></h1>
     <h1 class="display-4"><div id="Time" class="clock"></div></h1>
+    <!--
+        "하루에 한번만 열기" 체크박스를 클릭하면 closePopup() 함수가 실행됩니다.
+        closePopup 함수는 쿠키를 설정하여 당일에는 팝업이 다시 뜨지 않도록 하고, 팝업창을 닫습니다.
+        steam_popup.js에서 쿠키 제어 및 팝업 닫기 기능을 담당합니다.
+    -->
     <input class="form-check-input" type="checkbox" id="check_popup" onclick="closePopup();">
     <label class="form-check-label" for="flexCheckChecked">하루에 한번만 열기</label>
 </body>
